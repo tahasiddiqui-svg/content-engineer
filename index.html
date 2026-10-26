@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Taha Siddiqui · Content Engineer · Build log</title>
+<style>
+:root{--bg:#FAF9F6;--ink:#111;--mute:#6B6B6B;--line:#E4E1DA;--accent:#0052FF;--code:#F1EFEA}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:17px/1.6 -apple-system,"Inter",Helvetica,Arial,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:72px 24px 96px}
+.mono{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:13px;letter-spacing:.04em}
+.eyebrow{color:var(--accent);text-transform:uppercase}
+h1{font-size:40px;line-height:1.1;letter-spacing:-.02em;font-weight:600;margin:14px 0 18px}
+h2{font-size:22px;letter-spacing:-.01em;font-weight:600;margin:64px 0 6px}
+p.sub{color:var(--mute);margin-bottom:22px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(0,82,255,.3)}
+.asks{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px}
+.card{border:1px solid var(--line);border-radius:8px;padding:20px;background:#fff}
+.card .mono{color:var(--mute);text-transform:uppercase}
+.card h3{font-size:18px;margin:8px 0 6px;font-weight:600}
+.card p{font-size:15px;color:#333}
+.card a{display:inline-block;margin-top:12px;font-size:15px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:20px}
+.stat{padding:18px 0}.stat+.stat{border-left:1px solid var(--line);padding-left:18px}
+.stat b{font-size:28px;font-weight:600;letter-spacing:-.02em;display:block}
+.stat span{font-size:14px;color:var(--mute)}
+.pipe{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.pipe div{background:var(--code);border-radius:6px;padding:8px 12px}
+.pipe i{color:var(--mute);font-style:normal;align-self:center}
+.log{margin-top:22px;border-left:2px solid var(--line)}
+.entry{position:relative;padding:0 0 30px 26px}
+.entry:before{content:"";position:absolute;left:-6px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.entry .mono{color:var(--mute)}
+.entry h4{font-size:17px;font-weight:600;margin:4px 0}
+.entry p{font-size:15px;color:#333}
+.entry .fix{margin-top:6px;font-size:14px;background:var(--code);border-radius:6px;padding:8px 12px;font-family:"SF Mono",ui-monospace,Menlo,monospace}
+footer{margin-top:72px;padding-top:20px;border-top:1px solid var(--line);color:var(--mute);font-size:14px}
+@media(max-width:640px){.asks,.stats{grid-template-columns:1fr}.stat+.stat{border-left:0;padding-left:0}h1{font-size:32px}}
+</style></head><body><div class="wrap">
+
+<div class="mono eyebrow">Taha Siddiqui · Content Engineer · for Tenex</div>
+<h1>I write the piece. Then I build the system that ships the next ten.</h1>
+<p class="sub">Content Engineer at 66degrees, a Google Cloud partner selling to enterprise CxOs. Below: the two things you asked for, then the build log that shows how the system learns.</p>
+
+<div class="asks">
+  <div class="card" style="grid-column:1/-1"><div class="mono">Long form · written for Tenex</div><h3>Your AI content system doesn't have a writing problem. It has a memory problem.</h3><p>A 1,500 word applied piece on the correction log: the file that stops reviewers catching the same mistake twice. Every example is from my own pipeline.</p><a href="spec.html">Read the spec piece →</a></div>
+  <div class="card"><div class="mono">Long form · shipped at work</div><h3>Seats into adoption</h3><p>A decision stage blog for leaders who already deployed Gemini in Workspace. Written end to end from a client success story. Client anonymised; not yet published.</p><a href="work/blog.pdf">Read the piece →</a></div>
+  <div class="card"><div class="mono">Content system</div><h3>Two agents in production</h3><p>Built on our company Gemini Enterprise tenant. Colleagues use them; I maintain them. Live screenshots, captured 19 Oct 2026.</p><a href="work/agents.pdf">See the agents →</a></div>
+</div>
+
+<h2>What the system changed</h2>
+<p class="sub">From my own event campaign tracking, 2026.</p>
+<div class="stats">
+  <div class="stat"><b>48 h → 6 h</b><span>Event copy, brief to first full draft</span></div>
+  <div class="stat"><b>6 → 3</b><span>Review rounds per event campaign</span></div>
+  <div class="stat"><b>2</b><span>Agents in daily use, knowledge refreshed every morning</span></div>
+</div>
+
+<h2>The pipeline every piece runs through</h2>
+<p class="sub">Built in Claude Code with custom skills, hooks and memory. A person signs off at the end, always.</p>
+<div class="pipe mono">
+  <div>Brief</div><i>→</i><div>Locked facts</div><i>→</i><div>Reader + one CTA</div><i>→</i><div>Draft</div><i>→</i><div>Copy scorer</div><i>→</i><div>Line by line read</div><i>→</i><div>Self audit</div><i>→</i><div>Human sign off</div>
+</div>
+
+<h2>Build log</h2>
+<p class="sub">Every reviewer correction gets logged. Seen twice, it becomes a rule the pipeline enforces, so the same mistake never reaches a reviewer again. Real entries, lightly redacted.</p>
+<div class="log">
+  <div class="entry"><div class="mono">6 Oct 2026 · rule L3</div><h4>A score never proves quality</h4><p>The copy scorer gave an invite 94 out of 100. Read as a human, it never said where or what the event was.</p><div class="fix">rule: the word by word read outranks every score</div></div>
+  <div class="entry"><div class="mono">5 Oct 2026 · rule L1</div><h4>Time words are read when the asset is consumed</h4><p>A pre event video said "tonight". It would be watched days earlier.</p><div class="fix">rule: check every relative date against the send date</div></div>
+  <div class="entry"><div class="mono">5 Oct 2026 · rule L1</div><h4>Never invent social proof</h4><p>A draft invite said "several guests asked". No guest had. I caught it in the read.</p><div class="fix">rule: every claim traces to a named, dated source</div></div>
+  <div class="entry"><div class="mono">3 Oct 2026 · rule L1</div><h4>Test what a number counts</h4><p>A draft showed event capacity in a line the reader would take as invitations sent.</p><div class="fix">rule: name what every number counts before it ships</div></div>
+  <div class="entry"><div class="mono">22 Sep 2026 · rule L4</div><h4>One flag means audit the whole asset</h4><p>A reviewer flagged one blunt verb. The fix had to cover every word of its kind, not that one line.</p><div class="fix">rule: sweep the full asset for the class, report every fix</div></div>
+</div>
+
+<h2>Also shipped</h2>
+<p class="sub"><a href="work/campaign.pdf">Google Cloud Next 26 campaign</a>: the full campaign I wrote, from page to emails.</p>
+
+<footer>Taha Siddiqui · <a href="mailto:taha.siddiqui082@gmail.com">taha.siddiqui082@gmail.com</a> · <a href="https://www.linkedin.com/in/content-strategist-taha-siddiqui/">LinkedIn</a></footer>
+</div></body></html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The correction log · Taha Siddiqui</title>
+<style>
+:root{--bg:#FAF9F6;--ink:#111;--mute:#6B6B6B;--line:#E4E1DA;--accent:#0052FF;--code:#F1EFEA}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:19px/1.7 Georgia,"Iowan Old Style",serif}
+.wrap{max-width:680px;margin:0 auto;padding:64px 24px 96px}
+.mono{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:13px;letter-spacing:.04em;color:var(--mute)}
+.back{font-family:-apple-system,Helvetica,sans-serif;font-size:14px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(0,82,255,.3)}
+h1{font:600 40px/1.12 -apple-system,"Inter",Helvetica,sans-serif;letter-spacing:-.02em;margin:18px 0 14px}
+.dek{font-size:21px;color:#444;margin-bottom:10px}
+h2{font:600 23px/1.3 -apple-system,"Inter",Helvetica,sans-serif;letter-spacing:-.01em;margin:46px 0 10px}
+p{margin:0 0 20px}
+.note{font-family:-apple-system,Helvetica,sans-serif;font-size:15px;color:var(--mute);border-left:3px solid var(--accent);padding:4px 0 4px 16px;margin:26px 0 34px}
+pre{font:14px/1.6 "SF Mono",ui-monospace,Menlo,monospace;background:var(--code);border-radius:8px;padding:16px 18px;margin:0 0 22px;white-space:pre-wrap}
+ol{margin:0 0 22px 22px}li{margin-bottom:10px}
+hr{border:0;border-top:1px solid var(--line);margin:48px 0 24px}
+</style></head><body><div class="wrap">
+<div class="back"><a href="index.html">← Back to the build log</a></div>
+
+<div class="mono" style="margin-top:28px">APPLIED · SPEC PIECE FOR TENEX · 26 OCT 2026</div>
+<h1>Your AI content system doesn't have a writing problem. It has a memory problem.</h1>
+<p class="dek">Why the same mistakes keep coming back, and the one file that stops them.</p>
+<p class="mono">By Taha Siddiqui</p>
+
+<div class="note">A spec piece written for Tenex's applied pillar. Every example comes from my own pipeline at 66degrees, where I write enterprise content for CxO buyers.</div>
+
+<p>On 6 October my copy scorer gave an event invite 94 out of 100. It checked subject line strength, spam risk, readability and the call to action, and the draft passed all four. Then my reviewer read it the way a guest would and asked one question: where is this event, and what is it for?</p>
+
+<p>The invite never said. Every metric was green, and the one thing a guest needed was missing.</p>
+
+<p>That miss taught me more about running AI content in production than any model release this year. The model wrote well. The scorer did its job. What failed was the system around them, and it failed in a way most teams never see, because the fix happens in a reviewer's head and never reaches the machine.</p>
+
+<h2>The fix you make in a comment dies in that comment</h2>
+
+<p>Here is the loop most teams run. A model drafts. A person reviews. The person leaves a note: wrong date, invented quote, a word the brand never uses. Someone fixes that line, the piece ships, and everyone moves on.</p>
+
+<p>Next week the model drafts again, and it starts from zero. It has no idea that your CFO hates the word "leverage", that "tonight" means nothing in a video people will watch three days early, or that a reviewer spent twenty minutes last Tuesday removing a statistic nobody could source.</p>
+
+<p>So the reviewer catches it again. And again. The reviewer becomes the memory of the system, which means the system can never be faster than the reviewer. It is how drafts arrive in minutes while finished pieces still take days.</p>
+
+<p>The bottleneck was never generation. It was that every correction lived and died in a comment thread.</p>
+
+<h2>What a correction log is</h2>
+
+<p>A correction log is a plain file that sits between your reviewers and your models. Every time a person corrects a draft, the correction goes into the log with three things: what went wrong, the date, and the exact words the reviewer used.</p>
+
+<p>One of my earliest entries is from 22 September. A reviewer flagged the verb "cut" as too blunt for an enterprise buyer. Then the same word came back after the correction. That second appearance was the trigger, and it is the only rule the log needs:</p>
+
+<pre>A correction seen once is a note.
+A correction seen twice is a rule.</pre>
+
+<p>When an entry repeats, it gets promoted. It moves from the raw log into a short lessons file that every model in the pipeline reads before it writes a single word. The lesson states the rule, counts the evidence behind it, and records the last date it was confirmed. Rules that a later correction contradicts are retired with a reason, not deleted, so you can always see why the system believes what it believes.</p>
+
+<p>That is the whole mechanism. Log, count, promote, retire. It needs no new tool and no vendor. It works with whichever model you trust this month, because the knowledge lives in your file, not in the model.</p>
+
+<h2>Five entries, and what each one changed</h2>
+
+<p>Abstract rules are easy to agree with and hard to apply, so here are real entries from my log, with what each one now forces the system to do.</p>
+
+<ol>
+<li><strong>"Tonight" in a pre event video (5 October).</strong> The script used the word "tonight". The video would be watched days before the event. The rule now: every time word is read on the day the reader sees it, and every relative date is checked against the send date.</li>
+<li><strong>"Several guests asked" (5 October).</strong> A draft invite claimed past guests had requested a session. None had. The model filled a gap the template seemed to want filled. The rule now: no social proof, quote or ask enters a draft unless it traces to a named, dated source.</li>
+<li><strong>Capacity read as invitations (3 October).</strong> A line showed how many seats an event had, and a reader would take it as how many people were invited. Same number, different meaning. The rule now: before a number ships, name exactly what it counts.</li>
+<li><strong>One blunt verb (22 September).</strong> Fixing "cut" in one line was not enough. The reviewer's words: "we need to look at all other such terms." The rule now: one flag means sweep the entire asset for that class of problem, and report every fix.</li>
+<li><strong>The 94 that meant nothing (6 October).</strong> The rule now: a score is never evidence of quality. Only a full read, word by word, as the named reader, counts, and its output has to be written down before anything is called done.</li>
+</ol>
+
+<p>Notice what these have in common. None is a grammar error. A better model would not have prevented any of them, because each one depends on context the model could not see: when the video airs, what really happened at past events, what the reviewer means by "blunt". That context exists only in people's heads until you write it down.</p>
+
+<h2>What changed in the numbers</h2>
+
+<p>I run the events copy for 66degrees: invite sequences, ads, registration pages and social posts for webinars, workshops and partner events. Before the system, a campaign took about 48 hours from brief to a full first draft, and about six rounds of review before it shipped.</p>
+
+<p>Once the lessons file sat in front of every draft, and I built an agent that the events team uses directly, those numbers moved to about 6 hours and three rounds. The speed came from the agent. The review rounds came down because the reviewer stopped finding the same problems twice. Those are figures from my own campaign tracking, not a controlled study, and I would treat them as a direction rather than a benchmark.</p>
+
+<p>The less visible change mattered more. Reviewers began leaving harder notes: on argument, on whether a page earns its call to action, on what a buyer would actually feel. When the system remembers the easy corrections, people get to spend their attention on the ones only people can make.</p>
+
+<h2>How to start one this week</h2>
+
+<p>You do not need an agent stack to begin. You need a file and a habit.</p>
+
+<ol>
+<li><strong>Create one log for all reviewers.</strong> A shared doc or a text file in your repo. Each entry gets the date, the asset, what was wrong and the reviewer's exact words. Exact words matter; paraphrase loses the edge that made the note useful.</li>
+<li><strong>Promote on the second sighting.</strong> Once a week, read the log. Anything that appears twice becomes a lesson with a one line rule and an evidence count.</li>
+<li><strong>Put the lessons in front of every draft.</strong> Paste them into the system prompt, the project instructions or the agent's knowledge. If a model writes without reading them, the log is a diary, not a system.</li>
+<li><strong>Separate settled facts from lessons.</strong> Your partner tier, your product names, the phrases legal has approved: those are not lessons to be counted. They are facts, and they belong in their own locked file that no draft may contradict.</li>
+<li><strong>Retire with a reason.</strong> When a rule turns out to be wrong, move it to a retired section and say why. A system that only adds rules ends up rigid and contradictory.</li>
+</ol>
+
+<h2>The objection worth taking seriously</h2>
+
+<p>A fair worry is that a growing rulebook makes writing stiff. Pile on enough rules and every draft starts to sound like a compliance memo.</p>
+
+<p>In practice I have seen the opposite, with one condition: the rules have to be about the reader, not about style. "Every number names what it counts" protects the reader. "Never start a sentence with And" protects nobody. Keep the log honest about which kind each entry is, and retire the second kind on sight.</p>
+
+<p>The other condition is that a person still reads the final piece. The log takes the repeat mistakes off the reviewer's desk. It does not take the reviewer out of the loop. Every piece in my pipeline still ends with a human sign off, and the five entries above exist precisely because a human read closely enough to catch them.</p>
+
+<h2>The real asset is the file</h2>
+
+<p>Models will change several times before this time next year. Each change will tempt teams to rebuild their prompts from scratch, and each rebuild will quietly erase what the old setup learned.</p>
+
+<p>A correction log survives all of that. It is the one piece of your content system that compounds: every week it holds a little more of what your reviewers know, and every draft starts a little closer to finished. The model is the engine. The log is the memory. Without it, your best editor will keep catching the same mistake for as long as they work for you.</p>
+
+<p>Start the file today. Add the next correction you make. When it shows up a second time, you will know it worked.</p>
+
+<hr>
+<p class="mono">Taha Siddiqui · <a href="mailto:taha.siddiqui082@gmail.com">taha.siddiqui082@gmail.com</a> · <a href="https://www.linkedin.com/in/content-strategist-taha-siddiqui/">LinkedIn</a></p>
+</div></body></html>
