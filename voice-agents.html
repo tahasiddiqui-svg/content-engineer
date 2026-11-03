@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What your voice agent is allowed to do · Taha Siddiqui</title>
+<style>
+:root{--bg:#FAF9F6;--ink:#111;--mute:#6B6B6B;--line:#E4E1DA;--accent:#0052FF;--code:#F1EFEA}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:19px/1.7 Georgia,"Iowan Old Style",serif}
+.wrap{max-width:680px;margin:0 auto;padding:64px 24px 96px}
+.mono{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:13px;letter-spacing:.04em;color:var(--mute)}
+.back{font-family:-apple-system,Helvetica,sans-serif;font-size:14px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(0,82,255,.3)}
+h1{font:600 40px/1.12 -apple-system,"Inter",Helvetica,sans-serif;letter-spacing:-.02em;margin:18px 0 14px}
+.dek{font-size:21px;color:#444;margin-bottom:10px}
+h2{font:600 23px/1.3 -apple-system,"Inter",Helvetica,sans-serif;letter-spacing:-.01em;margin:46px 0 10px}
+p{margin:0 0 20px}
+.note{font-family:-apple-system,Helvetica,sans-serif;font-size:15px;color:var(--mute);border-left:3px solid var(--accent);padding:4px 0 4px 16px;margin:26px 0 34px}
+table{width:100%;border-collapse:collapse;font:15px/1.5 -apple-system,Helvetica,sans-serif;margin:0 0 24px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;background:var(--code)}
+ol{margin:0 0 22px 22px}li{margin-bottom:10px}
+hr{border:0;border-top:1px solid var(--line);margin:48px 0 24px}
+</style></head><body><div class="wrap">
+<div class="back"><a href="index.html">← Back to the build log</a></div>
+
+<div class="mono" style="margin-top:28px">SPEC PIECE · ENTERPRISE VOICE AI · 3 NOV 2026</div>
+<h1>Your voice agent can say anything. The real question is what it is allowed to do.</h1>
+<p class="dek">Why permissions, not personality, decide whether a voice agent survives a regulated customer journey.</p>
+<p class="mono">By Taha Siddiqui</p>
+
+<div class="note">A spec piece for leaders running customer journeys in insurance, auto lending and other regulated industries. The scenario below is illustrative, built to show the mechanics, not drawn from any company's data.</div>
+
+<p>Most voice AI demos are judged on one thing: how human the agent sounds. It pauses in the right places. It handles an interruption. It says "let me check that for you" with exactly the right warmth.</p>
+
+<p>That is the wrong test for an enterprise buyer. In a regulated journey, the risk does not sit in what the agent says. It sits in what the agent does after it says it: the record it opens, the document it sends, the quote it changes, the payment it schedules. Every one of those actions is a tool call, and every tool call is a decision someone in your company will have to defend to a customer, an auditor or a regulator.</p>
+
+<p>So before you ask how natural your voice agent sounds, ask a plainer question. What is it allowed to do, for whom, and who decided?</p>
+
+<h2>One call, five parties, six documents</h2>
+
+<p>Take a journey your teams already know: a customer buying auto insurance for a car financed through a dealer.</p>
+
+<p>On a single call, the agent may be speaking with the policyholder while acting on information from three other parties. The dealer has submitted the vehicle details. The lender needs proof of coverage before it releases funds. The underwriter has flagged a prior claim that needs an explanation. And the customer's spouse, who will also drive the car, is in the room and wants to ask a question.</p>
+
+<p>Around that conversation sit the documents: the application, the vehicle identification record, the loan agreement, the prior claim file, the declarations page, the proof of insurance letter the lender is waiting for. Each one has a different owner and a different rule about who may see it.</p>
+
+<p>A human agent handles this with judgment built over years. They know the spouse can ask about coverage but cannot change the payment method. They know the lender gets the proof of insurance letter, not the claim history. They know a quote can be explained on the call but only issued after underwriting signs off.</p>
+
+<p>A voice agent has none of that judgment by default. It has whatever access you gave it. If that access is broad, the agent is one confident sentence away from sending the wrong document to the wrong party.</p>
+
+<h2>What a tool call actually is</h2>
+
+<p>When people say a voice agent "takes action", they mean it calls a tool: a defined function connected to one of your systems. Look up a policy. Retrieve a document. Generate a quote. Send an email. Schedule a payment.</p>
+
+<p>The model decides when to call a tool, based on the conversation. The tool decides what actually happens in your system. That split is where control lives. You cannot fully control what a model will decide to attempt. You can fully control what each tool will permit.</p>
+
+<p>Tool call level permissions mean exactly that: every tool checks, at the moment it is called, whether this action is allowed for this caller, in this journey, at this step. Not whether the agent as a whole has access to the policy system. Whether this specific request, right now, should go through.</p>
+
+<p>The difference sounds technical. For an executive, it reduces to one sentence. Broad access asks "can the agent reach this system?" Tool call permissions ask "should this action happen, for this person, at this moment?"</p>
+
+<h2>The same call, governed two ways</h2>
+
+<p>Here is how the auto insurance call plays out under each model.</p>
+
+<table>
+<tr><th>Moment in the call</th><th>Broad system access</th><th>Tool call permissions</th></tr>
+<tr><td>Spouse asks to switch the payment card</td><td>Agent updates the card, because it can reach billing</td><td>Billing tool checks the caller is the policyholder, declines, and the agent explains who can make the change</td></tr>
+<tr><td>Lender's portal requests documents</td><td>Agent sends the full file it retrieved</td><td>Document tool releases only the proof of insurance letter, the one item the lender is entitled to</td></tr>
+<tr><td>Customer asks for a final price</td><td>Agent issues a binding quote from the rating engine</td><td>Quote tool returns an estimate and marks it pending until underwriting clears the prior claim</td></tr>
+<tr><td>Customer disputes the prior claim</td><td>Agent reads the claim notes aloud</td><td>Claim tool returns a summary safe to share and routes the dispute to a licensed adjuster</td></tr>
+</table>
+
+<p>Notice that in the right hand column the agent never becomes less helpful. It still answers every question. It simply cannot take an action the journey does not allow, and it always knows the next legitimate step to offer instead.</p>
+
+<h2>Why this matters more for voice than for chat</h2>
+
+<p>Three things make voice harder to govern than a chat window or a web form.</p>
+
+<p>First, identity is weaker. On a web portal, a customer logs in. On a call, the agent hears a voice, often with other people in the room. Every permission decision has to account for the fact that the person speaking may not be the person entitled to act.</p>
+
+<p>Second, speed removes the pause. In a form, a customer reviews a summary and clicks confirm. In conversation, "yes, go ahead" arrives mid sentence, and the agent acts on it. The checkpoint a form gives you for free has to be designed into the tools.</p>
+
+<p>Third, the record is a transcript, not a set of clicks. When a regulator asks why a document went to a lender, "the model decided" is not an answer. A permission layer that logs every attempted action, every decision and the rule behind it gives your compliance team something they can actually review.</p>
+
+<h2>Five questions to ask any voice AI vendor</h2>
+
+<p>If you are evaluating platforms, these questions separate a governed agent from a well spoken one.</p>
+
+<ol>
+<li><strong>Where are permissions enforced?</strong> In the prompt, where the model is asked to behave, or in the tools, where actions are blocked regardless of what the model attempts? Only the second holds up under pressure.</li>
+<li><strong>Can permissions depend on who is speaking?</strong> A policyholder, a co driver, a dealer and a lender need different rights inside the same journey.</li>
+<li><strong>Can permissions depend on the step?</strong> Explaining a quote and binding a quote are different actions and should unlock at different points.</li>
+<li><strong>What happens when an action is declined?</strong> The agent should say why in plain language and offer the legitimate path, not fail silently or invent a workaround.</li>
+<li><strong>What does the audit trail show?</strong> Ask to see a log of one call: every tool attempted, allowed or refused, and the rule that decided it.</li>
+</ol>
+
+<h2>The objection: will this make the agent rigid?</h2>
+
+<p>A fair concern is that tight permissions turn a fluent agent into a phone tree with a nicer voice.</p>
+
+<p>In practice the opposite tends to happen, for a simple reason. When the model knows the tools will catch a wrong action, you can let it be more conversational everywhere else. You no longer need a script that steers every customer away from risky requests, because a risky request simply cannot complete. The guardrails move out of the dialogue and into the systems, which is where they belong.</p>
+
+<p>The agent that sounds most natural on a regulated call is usually the one with the strictest tools behind it.</p>
+
+<h2>Where to start</h2>
+
+<p>You do not need to govern every journey at once. Pick the one with the most parties and the most documents, because that is where broad access fails first. Map every action an agent could take in it. For each action, write down who may trigger it, at which step, and what should happen when the answer is no.</p>
+
+<p>That map is your permission model. It is also, almost word for word, the policy your compliance team already enforces with human agents. The work is not inventing new rules. It is moving the rules you already have from a training manual into the tools your agent calls.</p>
+
+<p>Customers will judge your voice agent by how it sounds. Your auditors will judge it by what it did. Build for the second, and the first becomes much easier to get right.</p>
+
+<hr>
+<p class="mono">Taha Siddiqui · <a href="mailto:taha.siddiqui082@gmail.com">taha.siddiqui082@gmail.com</a> · <a href="https://www.linkedin.com/in/content-strategist-taha-siddiqui/">LinkedIn</a></p>
+</div></body></html>
